@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:13
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=addressbook
+      - POSTGRES_PASSWORD=addressbook_auth
+      - POSTGRES_DB=addressbook
+    volumes:
+        - /tmp:/tmp
+  web:
+    image: node
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - /usr/src/app/node_modules
+    command: npm start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://addressbook:addressbook_auth@db:5432/addressbook

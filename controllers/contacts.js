@@ -2,12 +2,14 @@ const database = require('../config/firebase');
 
 const Contacts = {}
 
+// Works but for some reason aways sends error message
 Contacts.getAll = (req, res) => {
     return database.ref('contacts/').get()
     .then((results) => { res.status(200).send(results)})
     .catch(() => res.status(404).json({ message: 'Could not found the contacts'}));
 };
 
+// Works but still sending 200 status when called with the wrong id
 Contacts.get = (req, res) => {
     var contactId = req.params.id;
     database.ref('contacts/' + contactId).get()
@@ -15,6 +17,7 @@ Contacts.get = (req, res) => {
     .catch(() => res.status(404).json({ message: 'Could not found this contact' }));
 };
 
+// Works but for some reason aways sends error message
 Contacts.create = (req, res) => {
     database.ref('/contacts').push({
         first_name: req.body.first_name,
@@ -35,6 +38,7 @@ Contacts.create = (req, res) => {
     });
 };
 
+// Seemns to work as expected
 Contacts.delete = (req, res) => {
     const contactId = req.params.id
     database.ref('contacts/' + contactId).remove()
@@ -42,6 +46,7 @@ Contacts.delete = (req, res) => {
     .catch(() => { res.status(403).json({message: 'Could not delete the contact'})});
 };
 
+// Works but for some reason aways sends error message
 Contacts.update = (req, res) => {
     const contactId = req.params.id
     database.ref('contacts/').child(contactId).update({
