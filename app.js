@@ -4,7 +4,7 @@ const database = require('./config/auth');
 require('dotenv').config();
 
 app.use(express.json());
-const contactsRoute = require('./routes/api/contacts');
+const contactsRoute = require('./routes/contacts');
 const authRoute = require('./routes/auth');
 
 app.use('/contacts', contactsRoute);

@@ -2,22 +2,29 @@ const database = require('../config/firebase');
 
 const Contacts = {}
 
-// Works but for some reason aways sends error message
-Contacts.getAll = (req, res) => {
-    return database.ref('contacts/').get()
-    .then((results) => { res.status(200).send(results)})
-    .catch(() => res.status(404).json({ message: 'Could not found the contacts'}));
+
+Contacts.getAll = async (req, res) => {
+    const result = await database.ref('contacts/').get()
+
+    if(!result) {
+      return res.status(404).json({ message: 'Could not found contacts' })
+    }
+
+    return res.status(200).json({ result })
 };
 
-// Works but still sending 200 status when called with the wrong id
-Contacts.get = (req, res) => {
-    var contactId = req.params.id;
-    database.ref('contacts/' + contactId).get()
-    .then((result) => { res.status(200).send(result)})
-    .catch(() => res.status(404).json({ message: 'Could not found this contact' }));
+
+Contacts.get = async (req, res) => {
+    const id = req.params.id;
+    const result = await database.ref('contacts/' + id).get()
+
+    if(!result) {
+      return res.status(404).json({ message: 'Could not found this contact' })
+    }
+
+    return res.status(200).json({ result })
 };
 
-// Works but for some reason aways sends error message
 const getContactFromBody = ({
     first_name = '',
     last_name = '',
@@ -46,25 +53,30 @@ Contacts.create = async (req, res) => {
     return res.status(201).json({ result });
 };
 
-// Seemns to work as expected
-Contacts.delete = (req, res) => {
+
+Contacts.delete = async (req, res) => {
     const contactId = req.params.id
-    database.ref('contacts/' + contactId).remove()
-    .then(() => { res.status(200).json({ message: 'Contact was deleted with success'})})
-    .catch(() => { res.status(403).json({message: 'Could not delete the contact'})});
+    const result = await database.ref('contacts/' + contactId).remove()
+
+    if (result) {
+      return res.status(404).json({ message: 'Contact not found'})
+    }
+
+    return res.status(200).json({ message: 'Contact Successfully deleted'})
 };
 
-// Works but for some reason aways sends error message
-Contacts.update = (req, res) => {
-    const contactId = req.params.id
-    database.ref('contacts/').child(contactId).update({
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            phone_number: req.body.phone_number,
-            address: req.body.address
-        })
-    .then((contact) => { res.status(200).send(contact.val())})
-    .catch(() => { res.status(403).json({message: 'Could not update the contact'})});
+// pq q da ruim com o id?
+Contacts.update = async (req, res) => {
+  const { params, body } = req;
+  const id = params.id
+  const contact = getContactFromBody(body);
+  
+  if (!isValidContact(contact)) {
+    return res.status(400).json({ message: 'Please, send a valid Contact.' });
+  }
+
+  const result = await database.ref('/contacts').child(id).update(contact)
+  return res.status(201).json({ result })
 };
 
 module.exports = Contacts;
