@@ -1,4 +1,5 @@
 const { JsonWebTokenError } = require('jsonwebtoken');
+const JwtGenerator = require('../utils/jwtGenerator');
 const { user } = require('../models');
 const { encrypt, decrypt } = require('../utils/password');
 
@@ -21,19 +22,20 @@ User.register = async (req, res) => {
 
 User.login = async (req, res) => {
     const { email, password } = req.body;
-    const user = await user.findOne({ where: { email: email } })
+    const logedUser = await user.findOne({ where: { email: email } })
+    
     try {
-        if(!user) {
+        if(!logedUser) {
             return res.status(404).send({ message: 'E-mail not found!'})
         }
 
-        const encryptedPassword = await decrypt(password, user.password)
+        const encryptedPassword = await decrypt(password, logedUser.password)
 
         if(!encryptedPassword) {
             return res.status(401).json({ message: 'Invalid password'});
         }
 
-        res.json({ token: await JwtGenerator(user.id) })
+        res.json({ token: await JwtGenerator(logedUser.id) })
     } catch (error) {
         res.json({ message: error.message })
     }

@@ -2,6 +2,20 @@ const database = require('../config/firebase');
 
 const Contacts = {}
 
+const getContactFromBody = ({
+    first_name = '',
+    last_name = '',
+    phone_number = '',
+    address = '',
+}) => ({
+    first_name,
+    last_name,
+    phone_number,
+    address,
+  });
+  
+  const isValidContact = (contact) =>
+      Object.values(contact).every(info => !!info.length);
 
 Contacts.getAll = async (req, res) => {
     const result = await database.ref('contacts/').get()
@@ -13,7 +27,6 @@ Contacts.getAll = async (req, res) => {
     return res.status(200).json({ result })
 };
 
-
 Contacts.get = async (req, res) => {
     const id = req.params.id;
     const result = await database.ref('contacts/' + id).get()
@@ -24,21 +37,6 @@ Contacts.get = async (req, res) => {
 
     return res.status(200).json({ result })
 };
-
-const getContactFromBody = ({
-    first_name = '',
-    last_name = '',
-    phone_number = '',
-    address = '',
-}) => ({
-    first_name,
-    last_name,
-    phone_number,
-    address,
-});
-
-const isValidContact = (contact) =>
-    Object.values(contact).every(info => !!info.length);
 
 Contacts.create = async (req, res) => {
     const { body } = req;

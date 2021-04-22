@@ -1,5 +1,4 @@
 const express = require('express');
-const auth = require('../config/auth');
 const router = express.Router();
 const Contacts = require('../controllers/contacts');
 const authorization = require('../middlewares/auth');

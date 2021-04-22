@@ -2,9 +2,12 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 module.exports = async (req, res, next) => {
+    // TODO: Fix
     try {
-        const jwtToken = req.header('token');
+        const jwtToken = req.rawHeaders('token');
 
+        console.log(req)
+        
         if (!jwtToken) {
             res.status(403).json({ message: 'Not Authorized' });
         }
