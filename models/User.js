@@ -1,20 +1,26 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const database = require('../config/auth');
-
-const User = database.define('User', {
+module.exports = (sequelize, DataTypes) =>
+  sequelize.define('user', {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
     email: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false,
+      required: true,
+      unique: true,
+      validate: {
+          isEmail: true,
+          notEmpty: true
+      },
     },
     password: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false,
+      required: true
     }
-})
-
-module.exports = User;
+  },
+  {
+    freezeTableName: true
+  })

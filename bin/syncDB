@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+const db = require("../models/");
+
+const sync = async () => {
+  try {
+    await db.sequelize.sync()
+    console.log('Success on syncDB')
+    process.exit(0)
+  } catch(error) {
+    console.log(error)
+    process.exit(1)
+  }
+}
+
+sync()

@@ -11,15 +11,23 @@ module.exports = {
         autoIncrement: true
       },
       email: {
-        type: STRING,
-        allowNull: false,
-        required: true
-      },
-      password: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         required: true,
+        unique: true,
+        validate: {
+            isEmail: true,
+            notEmpty: true
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        required: true
       }
+    },
+    {
+      freezeTableName: true
     }),
   down: queryInterface => queryInterface.dropTable(tableName),
 }

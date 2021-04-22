@@ -11,17 +11,17 @@ services:
       - POSTGRES_DB=addressbook
     volumes:
         - /tmp:/tmp
-  web:
-    image: node
-    build:
-      dockerfile: Dockerfile
-      context: .
-    volumes:
-      - /usr/src/app/node_modules
-    command: npm start
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgres://addressbook:addressbook_auth@db:5432/addressbook
+  # web:
+  #   image: node
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: .
+  #   volumes:
+  #     - /usr/src/app/node_modules
+  #   command: npm start
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DATABASE_URL=postgres://addressbook:addressbook_auth@db:5432/addressbook

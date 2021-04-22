@@ -18,24 +18,32 @@ Contacts.get = (req, res) => {
 };
 
 // Works but for some reason aways sends error message
-Contacts.create = (req, res) => {
-    database.ref('/contacts').push({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        phone_number: req.body.phone_number,
-        address: req.body.address
-    })
-    .then((contact) => {
-        const createdContact = {
-            dataId: contact.key,
-            first_name: contact.val().first_name,
-            last_name: contact.val().last_name,
-            phone_number: contact.val().phone_number,
-            address: contact.val().first_name
-        };
-        res.status(200).send(createdContact)})
-    .catch(() => { res.status(403).json({ message: 'Could not create the contact' });
-    });
+const getContactFromBody = ({
+    first_name = '',
+    last_name = '',
+    phone_number = '',
+    address = '',
+}) => ({
+    first_name,
+    last_name,
+    phone_number,
+    address,
+});
+
+const isValidContact = (contact) =>
+    Object.values(contact).every(info => !!info.length);
+
+Contacts.create = async (req, res) => {
+    const { body } = req;
+    const contact = getContactFromBody(body);
+
+    if (!isValidContact(contact)) {
+        return res.status(400).json({ message: 'Please, send a valid Contact.' });
+    }
+
+    const result = await database.ref('/contacts').push(contact);
+
+    return res.status(201).json({ result });
 };
 
 // Seemns to work as expected

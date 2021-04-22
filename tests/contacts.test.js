@@ -1,4 +1,4 @@
-// Integrtions tests for Contact scenarios
+// Integretion tests for Contact scenarios
 const request = require('supertest');
 const { query } = require('../tests/utils');
 
