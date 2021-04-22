@@ -27,3 +27,9 @@
 
 //     })
 // })
+
+// Cases:
+// User authenticated return status ok
+// user with wrong email or password
+// user not authenticated trying to call some of the contacts routes (with no token)
+// user trying to log with an invalid token
