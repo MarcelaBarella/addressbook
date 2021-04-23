@@ -10,6 +10,10 @@ const authRoute = require('./routes/auth');
 app.use('/contacts', contactsRoute);
 app.use('/auth', authRoute);
 
+// TODO: Add Error Handling to avoid application crashing
+// app.use('*', 500);
+
+
 async function main() {
     await database.sync();
     app.listen(process.env.PORT);
