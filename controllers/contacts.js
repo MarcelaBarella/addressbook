@@ -2,6 +2,13 @@ const database = require('../config/firebase');
 
 const Contacts = {}
 
+const CONTACT_SCHEMA_KEYS = [
+  'first_name',
+  'last_name',
+  'phone_number',
+  'address',
+]
+
 const getContactFromBody = ({
     first_name = '',
     last_name = '',
@@ -14,13 +21,23 @@ const getContactFromBody = ({
     address,
   });
   
-  const isValidContact = (contact) =>
-      Object.values(contact).every(info => !!info.length);
+const isValidContact = (contact) =>
+    Object.values(contact).every(info => !!info.length);
+
+const getCleanedInfoContact = (body) => Object.keys(body).reduce((accumulator, cur) => {
+  if(!CONTACT_SCHEMA_KEYS.includes(cur)) {
+    return accumulator;
+  }
+
+  return { ...accumulator, [cur]: body[cur] };
+}, {})
 
 Contacts.getAll = async (req, res) => {
-    const result = await database.ref('contacts/').get()
+    const { user } = req;
 
-    if(!result) {
+    const result = await database.ref(`users/${user.id}/contacts`).get();
+
+    if(!result.val()) {
       return res.status(404).json({ message: 'Could not found contacts' })
     }
 
@@ -28,8 +45,10 @@ Contacts.getAll = async (req, res) => {
 };
 
 Contacts.get = async (req, res) => {
-    const id = req.params.id;
-    const result = await database.ref('contacts/' + id).get()
+    const { id } = req.params;
+    const { user } = req;
+
+    const result = await database.ref(`users/${user.id}/contacts/${id}`).get();
 
     if(!result) {
       return res.status(404).json({ message: 'Could not found this contact' })
@@ -39,42 +58,52 @@ Contacts.get = async (req, res) => {
 };
 
 Contacts.create = async (req, res) => {
-    const { body } = req;
+    const { body, user } = req;
     const contact = getContactFromBody(body);
 
     if (!isValidContact(contact)) {
         return res.status(400).json({ message: 'Please, send a valid Contact.' });
     }
 
-    const result = await database.ref('/contacts').push(contact);
+    const { key } = await database.ref(`users/${user.id}/contacts`).push(contact);
+    const result = await database.ref(`users/${user.id}/contacts/${key}`).get();
 
     return res.status(201).json({ result });
 };
 
-
-Contacts.delete = async (req, res) => {
-    const contactId = req.params.id
-    const result = await database.ref('contacts/' + contactId).remove()
-
-    if (result) {
-      return res.status(404).json({ message: 'Contact not found'})
-    }
-
-    return res.status(200).json({ message: 'Contact Successfully deleted'})
-};
-
-// pq q da ruim com o id?
 Contacts.update = async (req, res) => {
-  const { params, body } = req;
-  const id = params.id
-  const contact = getContactFromBody(body);
-  
-  if (!isValidContact(contact)) {
-    return res.status(400).json({ message: 'Please, send a valid Contact.' });
+  const { params: { id }, body, user } = req;
+
+  const newInfoContact = getCleanedInfoContact(body);
+
+  const contact = await database.ref(`users/${user.id}/contacts/${id}`).get();
+
+  if(!contact.val()) {
+    return res.status(404).json({ message: 'Could not found this contact' })
   }
 
-  const result = await database.ref('/contacts').child(id).update(contact)
-  return res.status(201).json({ result })
+  await database.ref(`users/${user.id}/contacts/${id}`).update(newInfoContact);
+
+  return res.status(200).json({ message: 'Contact successfully updated'})
+};
+
+Contacts.delete = async (req, res) => {
+    const { id } = req.params;
+    const { user } = req;
+
+    try {
+      const contact = await database.ref(`users/${user.id}/contacts/${id}`).get();
+
+      if (!contact.val()) {
+        return res.status(404).json({ message: 'Contact not found'});
+      }
+
+      await database.ref(`users/${user.id}/contacts/${id}`).remove();
+    } catch(error) {
+      return res.status(500).json({ message: 'Something went wrong while removing contact! Please, try again later.' });
+    }
+    
+    return res.status(200).json({ message: 'Contact successfully deleted'});
 };
 
 module.exports = Contacts;
