@@ -11,10 +11,10 @@ const encrypt = async (password) => {
     return hash
 }
 
-const decrypt = async (password, userPassword) => {
+const validatePassword = async (password, userPassword) => {
     const validPassword = await bcrypt.compare(password, userPassword)
     
     return validPassword
 }
 
-module.exports = { encrypt, decrypt }
+module.exports = { encrypt, validatePassword }
