@@ -32,6 +32,11 @@ curl -X POST \<change> /auth/login \
 
 **Response**
 ```
+Status Code: 200
+```
+
+```
+{ 'token': <ACCESS_TOKEN> }
 ```
 
 
@@ -64,9 +69,14 @@ curl -X POST \<change> /auth/register \
 
 **Response**
 ```
+Status Code: 200
 ```
 
-This requests can only be made with a logged and authenticated user!
+```
+{ 'token': <ACCESS_TOKEN> }
+```
+
+### This requests can only be made with a logged and authenticated user!
 
 ## List all contacts: GET - /contacts/
 Endpoint to get all the user contacts.
@@ -79,11 +89,15 @@ GET /contacts/
 
 **cURL**
 ```
-curl -X GET \<change> /contacts
+curl -H "Authorization: Bearer <ACCESS_TOKEN>" -X GET \<change>/contacts
 ```
 
 ** Response**
 ```
+Status Code: 200
+```
+```
+
 ```
 
 ## Get a given contact: GET - /contacts/<contact_id>
@@ -98,11 +112,20 @@ GET /contacts/id
 
 **cURL**
 ```
-curl -X GET \<change> /contacts/id
+curl -H "Authorization: Bearer <ACCESS_TOKEN>" -X GET \<change> /contacts/id
 ```
 
 **Response**
 ```
+Status Code: 200
+```
+```
+{
+    first_name: "Marcela",
+    last_name: "Barella",
+    phone_number: "+55 11 963534656",
+    address: "São Paulo - Brasil",
+}
 ```
 
 ## Create a contact: POST - /contacts/create
@@ -129,7 +152,8 @@ POST /contacts/create
 
 **cURL**
 ```
-curl -X POST \
+curl -H "Authorization: Bearer <ACCESS_TOKEN>"
+    -X POST \
   <host>/contacts/create \
   -H 'Content-Type: application/json' \
   -d '{
@@ -142,6 +166,15 @@ curl -X POST \
 
 **Response**
 ```
+Status Code: 201
+```
+```
+{
+    first_name: "Marcela",
+    last_name: "Barella",
+    phone_number: "+55 11 963534656",
+    address: "São Paulo - Brasil",
+}
 ```
 
 ## Delete a contact: DELETE - /contacts/delete
@@ -156,15 +189,20 @@ DELETE /contacts/delete/
 
 **cURL**
 ```
-curl -X POST \
+curl -H "Authorization: Bearer <ACCESS_TOKEN>"
+curl -X DELETE \
   <host>/contacts/delete/<id>
 ```
 
 **Response**
 ```
+Status Code: 200
+```
+```
+{ message: 'Contact successfully deleted' }
 ```
 
-## Update a contact: PUT - /contacts/update/<contact_id>
+## Update a contact: PATCH - /contacts/update/<contact_id>
 Endpoint to update a contact. The allowed parameters are:
 | Attribute | Type | Description |
 | --------- | -----| --------- |
@@ -177,7 +215,7 @@ Endpoint to update a contact. The allowed parameters are:
 
 **Request**
 ``` 
-PUT /contacts/update/<id>
+PATCH /contacts/update/<id>
 {
     "first_name": "Marcela",
     "last_name": "Barella",
@@ -188,7 +226,8 @@ PUT /contacts/update/<id>
 
 **cURL**
 ```
-curl -X PUT \
+curl -H "Authorization: Bearer <ACCESS_TOKEN>"
+    -X PUT \
   <host>/contacts/update/<id> \
   -H 'Content-Type: application/json' \
   -d '{ \
@@ -201,4 +240,8 @@ curl -X PUT \
 
 **Response**
 ```
+Status Code: 200
+```
+```
+{ message: 'Contact successfully updated' }
 ```

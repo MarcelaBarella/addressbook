@@ -6,8 +6,9 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "nodemon ./app.js",
-    "test": "jest",
+    "start": "export NODE_ENV=development; nodemon ./bin/www",
+    "start:production": "export NODE_ENV=production; nodemon ./bin/www",
+    "test": "export NODE_ENV=test; jest tests/",
     "lint": "eslint"
   },
   "author": "",

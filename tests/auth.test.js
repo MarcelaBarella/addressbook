@@ -1,35 +1,87 @@
-// TODO: Write tests
+/* eslint-disable no-undef */
+const request = require('supertest')
+const app = require('../app')
+const dbHelper = require('./utils/sequelize')
 
-// Integration tests for Auth Scenarios
-// const response = require('supertest')
-// const jest = require('jest')
+beforeAll(async () => {
+  await dbHelper.restartUsersTable()
+})
 
-// describe.only("The API on login/ endpoint at post method should", async () => {
-//     setUp(async () => {
-//         await insertOnTable('Marcela', 'Barella', '123456', 'somewhere in brasil')
-//         await insertOnTable('Dua', 'Lipa', '789098', 'i dont know');
-//     })
+afterAll(async () => {
+  await dbHelper.closeConnection()
+})
 
-//     afterAll(async () => await cleanTable())
+describe('The API on auth/register endpoint at POST method should', () => {
+  afterEach(async () => {
+    await dbHelper.resetUsers()
+  })
 
-//     test("return 200 as status and re", () =>{
-        
-//     })
+  test('return 201 status and an auth JWT token after creating a new user', async () => {
+    const response = await request(app).post('/auth/register').send({
+      email: 'lulalivre@gmail.com',
+      password: 'd3m0cr4cy'
+    })
 
-//     test("return all the contacts with the properly attributes", async () => {
-//         expect.assertions(1)
-        
-       
-//     })
+    expect(response.statusCode).toEqual(201)
+    expect(response.body).toMatchObject({
+      token: expect.any(String)
+    })
+  })
 
-//     test("return 404 as status and an error message when called in a wrong way", () => {
-//         excpect.asserrtions(1)
+  test('return 400 when the user payload is not valid', async () => {
+    const response = await request(app).post('/auth/register').send({
+      email: 'lulalivre@gmail.com',
+      password: ''
+    })
 
-//     })
-// })
+    expect(response.statusCode).toEqual(400)
+    expect(response.body).toMatchObject({
+      message: 'You must provide a valid email and password!'
+    })
+  })
 
-// Cases:
-// User authenticated return status ok
-// user with wrong email or password
-// user not authenticated trying to call some of the contacts routes (with no token)
-// user trying to log with an invalid token
+  test.todo('return 400 if user already exists')
+})
+
+describe('The API on auth/login endpoint at POST method should', () => {
+  beforeEach(async () => {
+    await dbHelper.resetUsers()
+
+    await dbHelper.createUser({
+      email: 'bolsocida@gmail.com',
+      password: 'antid3m0cr4cy'
+    })
+  })
+
+  afterEach(async () => {
+    await dbHelper.resetUsers()
+  })
+
+  test('return 200 status and an auth JWT token for the logged user', async () => {
+    const response = await request(app).post('/auth/login').send({
+      email: 'bolsocida@gmail.com',
+      password: 'antid3m0cr4cy'
+    })
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body).toMatchObject({
+      token: expect.any(String)
+    })
+  })
+
+  test('return 404 status and a error message if the user does not exists', async () => {
+    const response = await request(app).post('/auth/login').send({
+      email: 'dontexists@gmail.com',
+      password: 'antid3m0cr4cy'
+    })
+
+    expect(response.statusCode).toEqual(404)
+    expect(response.body).toMatchObject({
+      message: 'User Not Found!'
+    })
+  })
+
+  test.todo(
+    'return 401 status and a error message if the password is not valid'
+  )
+})

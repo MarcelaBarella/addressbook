@@ -3,6 +3,7 @@
 - [Architecture](#architecture)
 - [Installation](#instalation)
 - [Usage](#usage)
+- [Running](#running)
 - [Tests](#tests)
 - [Improvements](#improvements)
 
@@ -16,6 +17,7 @@ This RESTful API allows a logged and authenticated user to:
 - change a contact informations.
 - delete a contact.
 
+
 In this solution was used:
 - [Node.js](https://nodejs.org/en/) - 
 - [Postgres](https://www.postgresql.org/) - An Open Source relational databse.
@@ -23,7 +25,13 @@ In this solution was used:
 - [Jest](https://jestjs.io/) - Javascript test framework that can be used with various frameworks.
 
 ## Usage
-To sse more details about how to use this API, please read the [USAGE](USAGE.md)
+To see more details about how to use this API, please read the [USAGE](USAGE.md)
+
+## Running
+To run all the tests of the application and verify the coverage run the command `make tests`.
+
+
 
 ## Improvements
 - Create a front-end stack for the project.
+- Generating a UUID using sequelizer.

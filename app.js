@@ -1,22 +1,27 @@
-const express = require('express');
-const app = express();
-const database = require('./config/auth');
-require('dotenv').config();
+const ENVIRONMENT = process.env.NODE_ENV || 'development'
+require('dotenv').config({ path: `.env.${ENVIRONMENT}` })
 
-app.use(express.json());
-const contactsRoute = require('./routes/contacts');
-const authRoute = require('./routes/auth');
+const express = require('express')
+const app = express()
+const contactsRoute = require('./routes/contacts')
+const authRoute = require('./routes/auth')
 
-app.use('/contacts', contactsRoute);
-app.use('/auth', authRoute);
+app.use(express.json())
 
-// TODO: Add Error Handling to avoid application crashing
-// app.use('*', 500);
+app.use('/contacts', contactsRoute)
+app.use('/auth', authRoute)
 
+app.use(function (req, res, next) {
+  const error = new Error('Resource Not Found')
+  error.status = 404
+  next(error)
+})
 
-async function main() {
-    await database.sync();
-    app.listen(process.env.PORT);
-}
+app.use(function (error, req, res, next) {
+  res.status(error.status || 500).json({
+    status: error.status,
+    message: error.message
+  })
+})
 
-main();
+module.exports = app

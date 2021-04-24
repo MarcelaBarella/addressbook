@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+const app = require("../app");
+
+(function main() {
+  app.listen(process.env.PORT);
+})();
