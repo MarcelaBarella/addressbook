@@ -1,5 +1,7 @@
 const database = require('../config/firebase')
+const uuid = require('uuid')
 
+// Move to an utils 
 const getContactFromBody = ({
   first_name = '',
   last_name = '',
@@ -26,11 +28,27 @@ const getCleanedInfoContact = (body) =>
     if (!CONTACT_SCHEMA_KEYS.includes(current)) {
       return accumulator
     }
-
+    
     return { ...accumulator, [current]: body[current] }
   }, {})
+  
+  const Contacts = {}
+  
+Contacts.create = async (req, res, next) => {
+  const { body, user } = req
+  const contact = getContactFromBody(body)
 
-const Contacts = {}
+  if (!isValidContact(contact)) {
+    const error = new Error('Please, send a valid Contact.')
+    error.status = 400
+    return next(error)
+  }
+
+  const { key } = await database.ref(`users/${user.id}/contacts`).push(contact)
+  const result = await database.ref(`users/${user.id}/contacts/${key}`).get()
+
+  return res.status(201).json({ result })
+}
 
 Contacts.getAll = async (req, res, next) => {
   const { user } = req
@@ -50,7 +68,7 @@ Contacts.get = async (req, res, next) => {
   const result = await database.ref(`users/${user.id}/contacts/${id}`).get()
 
   if (!result.val()) {
-    const error = new Error('Could not found this contac')
+    const error = new Error('Could not found this contact.')
     error.status = 404
     return next(error)
   }
@@ -58,21 +76,6 @@ Contacts.get = async (req, res, next) => {
   return res.status(200).json({ result })
 }
 
-Contacts.create = async (req, res, next) => {
-  const { body, user } = req
-  const contact = getContactFromBody(body)
-
-  if (!isValidContact(contact)) {
-    const error = new Error('Please, send a valid Contact.')
-    error.status = 400
-    return next(error)
-  }
-
-  const { key } = await database.ref(`users/${user.id}/contacts`).push(contact)
-  const result = await database.ref(`users/${user.id}/contacts/${key}`).get()
-
-  return res.status(201).json({ result })
-}
 
 Contacts.update = async (req, res, next) => {
   const {
@@ -93,7 +96,7 @@ Contacts.update = async (req, res, next) => {
 
   await database.ref(`users/${user.id}/contacts/${id}`).update(newInfoContact)
 
-  return res.status(200).json({ message: 'Contact successfully updated' })
+  return res.status(200).json({ message: 'Contact successfully updated.' })
 }
 
 Contacts.delete = async (req, res, next) => {
@@ -104,7 +107,7 @@ Contacts.delete = async (req, res, next) => {
     const contact = await database.ref(`users/${user.id}/contacts/${id}`).get()
 
     if (!contact.val()) {
-      const error = new Error('Contact not found')
+      const error = new Error('Contact not found this contact')
       error.status = 404
       return next(error)
     }

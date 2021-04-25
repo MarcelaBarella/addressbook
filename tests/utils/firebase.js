@@ -9,12 +9,8 @@ if (env !== 'test') {
   )
 }
 
-const restartContactsTable = async () => {
-  await database.ref(`users/${user.id}/contacts`).delete()
-}
-
-const createContact = async (contact) => {
-  await database.ref(`users/${user.id}/contacts`).push(contact)
+const createContact = async (user, contact) => {
+  await database.ref(`users`).push(contact)
 }
 
 module.exports = {
