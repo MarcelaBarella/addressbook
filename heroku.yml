@@ -12,6 +12,7 @@ services:
     volumes:
         - /tmp:/tmp
   web:
+    env_file: .env
     image: addressbook
     ports:
       - "3000:3000"
