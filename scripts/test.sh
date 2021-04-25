@@ -1,3 +1,3 @@
 #!/bin/sh
 
-npm test --coverage
+chmod +x export NODE_ENV=test; jest tests/ --watch 

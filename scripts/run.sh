@@ -1,3 +1,4 @@
 #!/bin/sh
+echo "Up and building environment"
 
-docker-compose up --build
+exec docker-compose up --build
