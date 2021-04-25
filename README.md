@@ -31,20 +31,21 @@ To see more details about how to use this API, please read the [USAGE](USAGE.md)
 
 ## Running
 To use this application on your computer you must install [docker](https://www.docker.com/), please refer to it official documentation to install it.
-When you have docker installed, then you can build this application typing the following in your computer terminal:
+You also need to create and configure you `.env.development` and `.env.test` following the `.env.example` to set your environment with the variables values for this enviroments and if you want to deploy this application in some other place you have to configure your `env.production` to.
+When you have docker installed and your variables set up, then you can build this application typing the following in your computer terminal:
 ```
-./scripts/run.sh
+docker-compose up --build
 ```
 
 ## Tests
 To run this application tests you can type the following command on your terminal:
 ```
-./scripts/test.sh
+NODE_ENV=test; jest tests/ --watch
 ```
 
 ## Improvements
 - Create user interface for the project.
 - Generating a UUID using sequelizer.
-- Use offline mode on firebase for testing.
+- Use offline mode on firebase for testing or create a project test to avoid conflict between production data and test data.
 - Improve register validation with more complex validations to email and password.
 
