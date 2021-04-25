@@ -27,7 +27,7 @@ describe('The API on contacts/ endpoint at POST method should', () => {
     await firebaseHelper.restartContactsTable();
   })
 
-  test.only('return 201 as status and the contact created in its body when called with a valid contact', async () => {
+  test('return 201 as status and the contact created in its body when called with a valid contact', async () => {
     const token = await createUserAndGetToken();
     const response = await request(app)
       .post("/contacts")
