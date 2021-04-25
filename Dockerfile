@@ -1,22 +1,14 @@
-# FROM node:alpine
-# WORKDIR /usr/app
 
-# COPY package*.json ./
-# RUN apt-get update && apt-get install -y postgresql-contrib
-# RUN npm install
+FROM node:alpine
 
-# COPY . .
+WORKDIR /app
 
-# ADD createUuidExtension.sh /docker-entrypoint-initdb.d/
-# RUN chmod 755 /docker-entrypoint-initdb.d/createUuidExtension.sh
+COPY package.json .
+RUN npm install
 
-# EXPOSE 3000
+COPY . .
 
-# CMD [ "npm", "start", "start.dev" ]
+USER node
+EXPOSE 3000
 
-# FROM postgres
-
-# RUN apt-get update && apt-get install -y postgresql-contrib
-
-# ADD createUuidExtension.sh /docker-entrypoint-initdb.d/
-# RUN chmod 755 /docker-entrypoint-initdb.d/createUudiExtension.sh
+CMD ["npm", "run", "start"]
