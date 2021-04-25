@@ -1,5 +1,7 @@
+const db = require('../utils/firebaseEnvSelector')
+
 module.exports = (sequelize, DataTypes) =>
-  sequelize.define('user', {
+  sequelize.define(db(), {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
