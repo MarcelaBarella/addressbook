@@ -22,7 +22,7 @@ POST /auth/login
 
 **cURL**
 ```
-curl -X POST \<change> /auth/login \
+curl -X POST \ <host>/auth/login \
 -H 'Content-Type: application/json' \
 -d '{
     "email": "marcela.barella@hotmail.com",
@@ -59,7 +59,7 @@ POST /auth/register
 
 **cURL**
 ```
-curl -X POST \<change> /auth/register \
+curl -X POST <host>/auth/register \
 -H 'Content-Type: application/json' \
 -d '{
     "email": "marcela.barella@hotmail.com",
@@ -89,7 +89,7 @@ GET /contacts/
 
 **cURL**
 ```
-curl -H "Authorization: Bearer <ACCESS_TOKEN>" -X GET \<change>/contacts
+curl -H "Authorization: Bearer <ACCESS_TOKEN>" -X GET \ <HOST>/contacts
 ```
 
 ** Response**

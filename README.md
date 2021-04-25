@@ -17,12 +17,8 @@ This project is a `address book` service writted in `Node.js`, with allows a log
 - get a especific contact.
 - change a contact informations.
 - delete a contact.
-The flow of use fro this application consists on register a user using an `email` and a `password`
-
-
-The application have two databasses where firebase is used to persists contacts informations for a given user, and postgres is used to persists users.
-The choice of use postgres for the authentication, its because postgres
-
+The flow of use for this application consists on register a user using an `email` and a `password`, after that, you must
+take your generated token and use it to access your list of contacts. You can perform the actions previously mentioned on the paragraph above to manage your contacts.
 
 In this solution was used:
 - [Node.js](https://nodejs.org/en/) - 
@@ -37,17 +33,18 @@ To see more details about how to use this API, please read the [USAGE](USAGE.md)
 To use this application on your computer you must install [docker](https://www.docker.com/), please refer to it official documentation to install it.
 When you have docker installed, then you can build this application typing the following in your computer terminal:
 ```
+./scripts/run.sh
 ```
 
 ## Tests
 To run this application tests you can type the following command on your terminal:
 ```
+./scripts/test.sh
 ```
-
-
 
 ## Improvements
 - Create user interface for the project.
 - Generating a UUID using sequelizer.
+- Use offline mode on firebase for testing.
 - Improve register validation with more complex validations to email and password.
 
