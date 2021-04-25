@@ -18,8 +18,8 @@ describe('The API on auth/register endpoint at POST method should', () => {
 
   test('return 201 status and an auth JWT token after creating a new user', async () => {
     const response = await request(app).post('/auth/register').send({
-      email: 'lulalivre@gmail.com',
-      password: 'd3m0cr4cy'
+      email: 'bananinha@gmail.com',
+      password: 'B@n@n4'
     })
 
     expect(response.statusCode).toEqual(201)
@@ -30,7 +30,7 @@ describe('The API on auth/register endpoint at POST method should', () => {
 
   test('return 400 when the user payload is not valid', async () => {
     const response = await request(app).post('/auth/register').send({
-      email: 'lulalivre@gmail.com',
+      email: 'bananinha@gmail.com',
       password: ''
     })
 
@@ -48,8 +48,8 @@ describe('The API on auth/login endpoint at POST method should', () => {
     await dbHelper.resetUsers()
 
     await dbHelper.createUser({
-      email: 'bolsocida@gmail.com',
-      password: 'antid3m0cr4cy'
+      email: 'naoseihein@gmail.com',
+      password: 'd3m0cr4cy'
     })
   })
 
@@ -72,7 +72,7 @@ describe('The API on auth/login endpoint at POST method should', () => {
   test('return 404 status and a error message if the user does not exists', async () => {
     const response = await request(app).post('/auth/login').send({
       email: 'dontexists@gmail.com',
-      password: 'antid3m0cr4cy'
+      password: 'd3m0cr4cy'
     })
 
     expect(response.statusCode).toEqual(404)
