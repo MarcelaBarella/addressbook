@@ -7,7 +7,6 @@ const User = {}
 User.register = async (req, res, next) => {
   const { email, password } = req.body
 
-  // TODO: improve register validations (a more complex email and password validation)
   if (!email || !password) {
     const error = new Error('You must provide a valid email and password!')
     error.status = 400

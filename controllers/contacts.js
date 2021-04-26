@@ -1,7 +1,5 @@
 const database = require('../config/firebase')
-const uuid = require('uuid')
 
-// Move to an utils 
 const getContactFromBody = ({
   first_name = '',
   last_name = '',
@@ -32,7 +30,7 @@ const getCleanedInfoContact = (body) =>
     return { ...accumulator, [current]: body[current] }
   }, {})
   
-  const Contacts = {}
+const Contacts = {}
   
 Contacts.create = async (req, res, next) => {
   const { body, user } = req
