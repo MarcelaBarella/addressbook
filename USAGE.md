@@ -96,9 +96,6 @@ curl -H "Authorization: Bearer <ACCESS_TOKEN>" -X GET \ <HOST>/contacts
 ```
 Status Code: 200
 ```
-```
-
-```
 
 ## Get a given contact: GET - /contacts/<contact_id>
 Endpoint to get a contact by its id.

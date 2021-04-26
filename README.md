@@ -36,6 +36,10 @@ When you have docker installed and your variables set up, then you can build thi
 ```
 docker-compose up --build
 ```
+After up and building the application use te following command to sync the models with the database:
+```
+syncDB
+```
 
 ## Tests
 To run this application tests you can type the following command on your terminal:
