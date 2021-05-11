@@ -10,7 +10,6 @@ Simple API to manage a list of contacts.
 - [Improvements](#improvements)
 
 ## Architecture
-
 This project is a `address book` service writted in `Node.js`, with allows a logged user to::
 - create a contact with address, first name, last name and phone number.
 - get a list with all contacts.
@@ -48,8 +47,9 @@ NODE_ENV=test; jest tests/ --watch
 ```
 
 ## Improvements
-- Create user interface for the project.
+- Create user interface for the project (using some template engine).
 - Generating a UUID using sequelizer.
 - Use offline mode on firebase for testing or create a project test to avoid conflict between production data and test data.
-- Improve register validation with more complex validations to email and password.
-
+- Improve register validation with more complex validations to email and password (using schemas or some libs).
+- Change the environment variables to use config json instead of .env
+- Use sequelize to do migrations and other features instead of syncDB
